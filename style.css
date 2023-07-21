@@ -1,0 +1,133 @@
+/* The universal selector (*) CSSff.*/
+
+* {
+
+    box-sizing: border-box;
+}
+
+/* For body back-ground color */
+body {
+    background-color: lightblue;
+}
+
+
+/* For Box CSS */
+#box {
+
+    background: white;
+    width: 80%;
+    max-width: 700px;
+    margin: 200px auto 0;
+    border-radius: 10px;
+    padding: 30px;
+    display: none;
+
+}
+
+li {
+
+    list-style-type: none;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.answer {
+    cursor: pointer;
+}
+
+/* Submit & Try Again Button CSS */
+
+#submit {
+    background-color: blue;
+    color: white;
+    font-size: larger;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    /* margin-top: 10px; */
+
+}
+
+
+
+
+
+
+/*  cookie */
+#modelbox {
+    background: lightsalmon;
+    width: 35%;
+    margin: 200px auto 0;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+}
+
+.boxclass {
+    font-size: 25px;
+}
+
+.boxclass input {
+    font-size: 15px;
+    height: 35px;
+    width: 50%;
+    border-radius: 5px;
+}
+
+#mbsubmit {
+    background-color: black;
+    color: white;
+    font-size: larger;
+    width: 25%;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+
+#resultbox {
+    display: none;
+    background: lightslategrey;
+    width: 35%;
+    margin: 200px auto 0;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+
+}
+
+table,
+th,
+td {
+    border: 2px black solid;
+    border-collapse: collapse;
+}
+
+#tbl1 {
+    width: 100%;
+}
+
+#tbl {
+    width: 100%;
+}
+
+td {
+    width: 18%;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+#back {
+    /* display: none; */
+    background-color: red;
+    color: white;
+    font-size: larger;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+}
