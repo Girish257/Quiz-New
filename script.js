@@ -26,14 +26,14 @@ const quiz_data = [
         D: "JavaScript",
         correct: "D",
     },
-    // {
-    //     question: "What does CSS stand for ?",
-    //     A: "Cental Style Sheets",
-    //     B: "Cascading Simple Sheets",
-    //     C: "Cascanding Style Sheets",
-    //     D: "Cars SUVs Sailboats",
-    //     correct: "C",
-    // },
+    {
+        question: "What does CSS stand for ?",
+        A: "Cental Style Sheets",
+        B: "Cascading Simple Sheets",
+        C: "Cascanding Style Sheets",
+        D: "Cars SUVs Sailboats",
+        correct: "C",
+    },
 
 ];
 
@@ -80,9 +80,6 @@ function startQuiz() {
         backButton++;
     } else {
         document.getElementById('back').style.display = "block";
-
-        // var x55 = document.getElementById("back").readOnly;
-        // console.log(x55)
     }
 
 
@@ -163,9 +160,8 @@ submitButton.addEventListener('click', () => {
 
         AnsObj = {
             // "quesid": QuesID,
-            // "ans": solution,
-            // "QuescfghfghID": QuesID, solution
-            QuesID, 
+
+            QuesID,
             solution,
         }
 
@@ -295,13 +291,6 @@ function randomQues() {
 const getModel = document.getElementById("modelbox")
 
 
-// getModel.addEventListener('submit', (e) => {
-//     e.preventDefault()
-// getModel.style.display = 'none';
-// getQuiz.style.display = 'block';
-// });
-
-
 let tryObj = {}
 
 // 
@@ -402,12 +391,6 @@ back.addEventListener("click", () => {
         currentQuizIndex--;
         startQuiz()
 
-        // var azx = localStorage.getItem(currentQuiz,answers)
-        // console.log(azx)
-        // console.log(localStorage.removeItem(currentQuiz))
-        // let adc = localStorage.removeItem(currentQuiz)
-        // console.log(adc)
-        // setSelect(azx)  
 
     }
 });
