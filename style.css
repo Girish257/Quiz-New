@@ -127,3 +127,8 @@ td {
     padding: 10px;
     border-radius: 10px;
 }
+
+
+#next {
+    display: none;
+}

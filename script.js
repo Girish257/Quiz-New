@@ -35,13 +35,10 @@ const quiz_data = [
         D: "Cars SUVs Sailboats",
         correct: "C",
     },
-
 ];
-
 
 // this is for initialization of random-question function
 randomQues();
-
 
 const getQuiz = document.getElementById("box");
 
@@ -49,138 +46,153 @@ const getQuestion = document.getElementById("question");
 
 const getAnswerAll = document.querySelectorAll(".answer");
 
-const ans1 = document.getElementById('answer1');
-const ans2 = document.getElementById('answer2');
-const ans3 = document.getElementById('answer3');
-const ans4 = document.getElementById('answer4');
+const ans1 = document.getElementById("answer1");
+const ans2 = document.getElementById("answer2");
+const ans3 = document.getElementById("answer3");
+const ans4 = document.getElementById("answer4");
 
-const submitButton = document.getElementById('submit');
-
+const submitButton = document.getElementById("submit");
 
 const getResult = document.getElementById("resultbox");
-
 
 let currentQuizIndex = 0;
 let backButton = 0;
 let score = 0;
-emtObj = {}
+emtObj = {};
 solnSelected = 0;
 
-
-// initialization of function 
-startQuiz()
-
+// initialization of function
+startQuiz();
 
 function startQuiz() {
-
     UnSelectAnswer();
 
     if (backButton == 0) {
-        document.getElementById('back').style.display = "none";
+        document.getElementById("back").style.display = "none";
 
         backButton++;
-    }
-    else {
-        document.getElementById('back').style.display = "block";
+    } else {
+        document.getElementById("back").style.display = "block";
     }
 
     // from here one full object is getting
     const currentQuizData = quiz_data[currentQuizIndex];
     // console.log(currentQuizData)
 
-
     // From here Question
-    getQuestion.innerText = currentQuizData.question
+    getQuestion.innerText = currentQuizData.question;
 
     // console.log(currentQuizData.question)
-
 
     // from here all 4 four answer
     ans1.innerText = currentQuizData.A;
     ans2.innerText = currentQuizData.B;
     ans3.innerText = currentQuizData.C;
     ans4.innerText = currentQuizData.D;
-
 }
 
 // this is for unselecting
 function UnSelectAnswer() {
-    getAnswerAll.forEach(getAnswer => getAnswer.checked = false);
+    getAnswerAll.forEach((getAnswer) => (getAnswer.checked = false));
 }
 
 function getSelected() {
     let result;
-    getAnswerAll.forEach(getAnswer => {
+    getAnswerAll.forEach((getAnswer) => {
         if (getAnswer.checked) {
             result = getAnswer.id;
         }
-    })
+    });
     return result;
 }
 var EmailN;
 var ScoreN;
 
-// Submit button js
+function addUpdateQuestions(existingQuestions, QId, Answer) {
+    let QObj = { Id: QId, Answer: Answer };
 
-submitButton.addEventListener('click', () => {
+    if (existingQuestions != null && existingQuestions.length > 0) {
+        let IsExisting = existingQuestions.find((item) => item.Id === QId);
+
+        if (IsExisting != null && IsExisting.Id == QId) {
+            //// When exist that time update answer
+            existingQuestions.forEach(function (item) {
+                if (item.Id == QId) {
+                    item.Answer = Answer;
+                }
+            });
+        } else {
+            //// When not exist question that push
+            existingQuestions.push(QObj);
+        }
+    } else {
+        //// When null or First Time
+        existingQuestions = [];
+        existingQuestions.push(QObj);
+    }
+    return existingQuestions;
+}
+
+// Submit button js
+submitButton.addEventListener("click", () => {
     const solution = getSelected();
-    let getId = quiz_data[currentQuizIndex].id
+    let getId = quiz_data[currentQuizIndex].id;
+    let getForOption = localStorage.getItem(EmailN);
+    getForOption = JSON.parse(getForOption);
 
     if (solution) {
-
         if (!emtObj.optionSelect) {
-            let getForOption = localStorage.getItem(EmailN)
-
-            getForOption = JSON.parse(getForOption)
-
             emtObj.optionSelect = {
-                "username": getForOption.Username,
-                "Email": getForOption.Email,
-                [getId]: solution
-            }
+                username: getForOption.Username,
+                Email: getForOption.Email,
+                CurrentQId: getId,
+                Questions: addUpdateQuestions(getForOption.Questions, getId, solution),
+            };
+        } else {
+            var getQuestionsObject = addUpdateQuestions(
+                getForOption.optionSelect.Questions,
+                getId,
+                solution
+            );
+            emtObj.optionSelect["Questions"] = getQuestionsObject;
+            emtObj.optionSelect["CurrentQId"] = getId;
         }
-        else {
-            emtObj.optionSelect[getId] = solution
+        solnSelected[getId] = solution;
+        // emtObj.getId = getId;
 
-        }
-        solnSelected[getId] = solution
-
-        emtObj.getId = getId;
-
-        localStorage.setItem(EmailN, JSON.stringify(emtObj))
-
+        localStorage.setItem(EmailN, JSON.stringify(emtObj));
 
         if (solution === quiz_data[currentQuizIndex].correct) {
-            score++
+
+            score++;
         }
 
         currentQuizIndex++;
 
         if (currentQuizIndex < quiz_data.length) {
             startQuiz();
-        }
+            setPreviousSelection();
+        } else {
+            getQuiz.addEventListener("click", (e) => {
+                e.preventDefault();
+                getQuiz.style.display = "none";
+                getResult.style.display = "block";
 
-        else {
-
-            getQuiz.addEventListener('click', (e) => {
-
-                e.preventDefault()
-                getQuiz.style.display = 'none';
-                getResult.style.display = 'block';
                 // Correct answer
 
                 ScoreN = score;
 
-                let getData = localStorage.getItem(EmailN)
-                getData = JSON.parse(getData)
+                let getData = localStorage.getItem(EmailN);
+                getData = JSON.parse(getData);
 
                 let newobj = {
-                    "username": getData.optionSelect.username,
-                    "Email": getData.optionSelect.Email,
-                    "score": ScoreN,
-                }
-                let setWithScore = localStorage.setItem(EmailN, JSON.stringify(newobj))
-
+                    username: getData.optionSelect.username,
+                    Email: getData.optionSelect.Email,
+                    CurrentQId: getData.optionSelect.CurrentQId,
+                    Questions: getData.optionSelect.Questions,
+                    score: ScoreN,
+                };
+                let setWithScore = localStorage.setItem(EmailN, JSON.stringify(newobj));
 
                 var CurrentUserScore = localStorage.getItem(EmailN);
                 // console.log(EmailN);
@@ -191,8 +203,7 @@ submitButton.addEventListener('click', () => {
                 // console.log(localStorage.length)
 
                 for (let i = 0; i < localStorage.length; i++) {
-
-                    getFortable = JSON.parse(localStorage.getItem(localStorage.key(i)))
+                    getFortable = JSON.parse(localStorage.getItem(localStorage.key(i)));
 
                     tbl.innerHTML += `
                     <table>
@@ -209,20 +220,19 @@ submitButton.addEventListener('click', () => {
                        </tr>
                        
                      </table>   
-                    `
+                    `;
                 }
             });
-        };
+        }
     } else {
         // without radio-button submit button is clicked.
         alert("Please select one option atleast!");
     }
-})
+});
 
 // Randomly shuffling of question.
 
 function randomQues() {
-
     for (let i = quiz_data.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         let temp = quiz_data[i];
@@ -233,43 +243,37 @@ function randomQues() {
 
 // local storage implement here
 
-const getModel = document.getElementById("modelbox")
-let localObj = {}
-const form = document.getElementById('myForm')
+const getModel = document.getElementById("modelbox");
+let tryObj = {};
+const form = document.getElementById("myForm");
 
 // modelbox to box
-form.addEventListener('submit', (e) => {
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    closeBrowser();
 
-    e.preventDefault()
-    closeBrowser()
-
-    // if (closeBrowser() == false) {
-    //     return false;
-    // }
 
     if (validateform() == false) {
         return false;
     }
-    let getUser = document.getElementById('username').value
-    let getEmail = document.getElementById('email').value
+    let getUser = document.getElementById("username").value;
+    let getEmail = document.getElementById("email").value;
 
     EmailN = getEmail;
 
     for (let i = 0; i < localStorage.length; i++) {
-
-        let smEmail = localStorage.key(i)
+        let smEmail = localStorage.key(i);
 
         if (smEmail == EmailN) {
-
             let resultView = localStorage.getItem(EmailN);
             const Dataparse = JSON.parse(resultView);
 
             document.getElementById("tcorrect").innerHTML = Dataparse.score;
 
-            document.getElementById('username2').innerHTML = Dataparse.username
+            document.getElementById("username2").innerHTML = Dataparse.username;
 
             for (let i = 0; i < localStorage.length; i++) {
-                getForsmEmail = JSON.parse(localStorage.getItem(localStorage.key(i)))
+                getForsmEmail = JSON.parse(localStorage.getItem(localStorage.key(i)));
 
                 tbl.innerHTML += `
                 <table>
@@ -284,47 +288,49 @@ form.addEventListener('submit', (e) => {
                    </tr>
 
                  </table>   
-                `
+                `;
             }
+            let ress = sessionStorage.setItem(EmailN);
 
 
             getModel.style.display = "none";
-            getResult.style.display = 'block';
-            return false
+            getResult.style.display = "block";
+            return false;
+
 
 
         }
     }
 
-    getModel.style.display = 'none';
+    getModel.style.display = "none";
 
-    getQuiz.style.display = 'block';
+    getQuiz.style.display = "block";
 
+    tryObj = {
+        Username: getUser,
+        Email: EmailN,
+        CurrentQId: currentQuizIndex,
+        Questions: [],
+    };
 
-    localObj = {
-        "Username": getUser,
-        "Email": EmailN,
-    }
+    let set1 = localStorage.setItem(EmailN, JSON.stringify(tryObj));
 
-    let set1 = localStorage.setItem(EmailN, JSON.stringify(localObj))
+    let get1 = localStorage.getItem(EmailN);
+    get1 = JSON.parse(get1);
 
-    let get1 = localStorage.getItem(EmailN)
-    get1 = JSON.parse(get1)
-
-    var get2 = document.getElementById('username1');
+    var get2 = document.getElementById("username1");
     get2.value = get1.Username;
 
-    let get3 = document.getElementById('username2')
+    let get3 = document.getElementById("username2");
     get3.innerHTML = get1.Username;
-})
-
-
+});
 
 // validation form
-const isValidEmail = emailparam => {
-    const Regex = /^(([a-zA-Z]+[^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const isValidEmail = (emailparam) => {
+    const Regex =
+        /^(([a-zA-Z]+[^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return Regex.test(String(emailparam).toLowerCase());
-}
+};
 
 function validateform() {
     var name = form.username.value;
@@ -333,65 +339,55 @@ function validateform() {
     if (name == null || name == "") {
         alert("Name can't be blank");
         return false;
-
     } else if (name.length < 8) {
-        alert("Name can't be less than 8 characters!")
+        alert("Name can't be less than 8 characters!");
         return false;
-    }
-    else if (emailcheck == null || emailcheck == "") {
+    } else if (emailcheck == null || emailcheck == "") {
         alert("Email can't be blank");
         return false;
-    }
-    else if (!isValidEmail(emailcheck)) {
+    } else if (!isValidEmail(emailcheck)) {
         alert("You have insert invalid email");
         return false;
-    }
-    else {
+    } else {
         return true;
     }
 }
-
-
 
 // Back button
 back.addEventListener("click", () => {
     if (currentQuizIndex > 0) {
         currentQuizIndex--;
         startQuiz();
-
-        let emailSame = localStorage.getItem(EmailN)
-
-        emailSame = JSON.parse(emailSame)
-
-
-        let getId = quiz_data[currentQuizIndex].id
-
-        console.log(emailSame.getId.length)
-
-        for (let i = 0; i < emailSame.getId.length; i++) {
-            if (emailSame.getId == getId) {
-                document.getElementById(emailSame.optionSelect[getId]).checked = true;
-            }
-        }
+        setPreviousSelection(); // Call the function to set the previous selection.
     }
 });
+
+function setPreviousSelection() {
+    let emailSame = localStorage.getItem(EmailN);
+    emailSame = JSON.parse(emailSame);
+
+    let currentScreenQId = quiz_data[currentQuizIndex].id;
+
+    for (let i = 0; i < emailSame.optionSelect.Questions.length; i++) {
+        var forObj = emailSame.optionSelect.Questions[i];
+        if (forObj.Id === currentScreenQId) {
+            document.getElementById(forObj.Answer).checked = true;
+        }
+    }
+}
 
 
 //   Close browser
 
 function closeBrowser() {
-
-    console.log(localStorage.length)
+    console.log(localStorage.length);
 
     if (localStorage.length >= 10) {
-        alert("max item")
-        localStorage.clear()
-        window.close("index.html")
+        alert("2max item");
+        localStorage.clear();
+        window.close("index.html");
         return true;
     }
 }
-
-
-
 
 
