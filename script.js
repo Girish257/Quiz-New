@@ -234,7 +234,7 @@ function randomQues() {
 // local storage implement here
 
 const getModel = document.getElementById("modelbox")
-let tryObj = {}
+let localObj = {}
 const form = document.getElementById('myForm')
 
 // modelbox to box
@@ -301,12 +301,12 @@ form.addEventListener('submit', (e) => {
     getQuiz.style.display = 'block';
 
 
-    tryObj = {
+    localObj = {
         "Username": getUser,
         "Email": EmailN,
     }
 
-    let set1 = localStorage.setItem(EmailN, JSON.stringify(tryObj))
+    let set1 = localStorage.setItem(EmailN, JSON.stringify(localObj))
 
     let get1 = localStorage.getItem(EmailN)
     get1 = JSON.parse(get1)
@@ -355,7 +355,7 @@ function validateform() {
 
 // Back button
 back.addEventListener("click", () => {
-    if (currentQuizIndex < 0) {
+    if (currentQuizIndex > 0) {
         currentQuizIndex--;
         startQuiz();
 
@@ -384,7 +384,7 @@ function closeBrowser() {
     console.log(localStorage.length)
 
     if (localStorage.length >= 10) {
-        alert("2max item")
+        alert("max item")
         localStorage.clear()
         window.close("index.html")
         return true;
