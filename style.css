@@ -20,7 +20,7 @@ body {
     margin: 200px auto 0;
     border-radius: 10px;
     padding: 30px;
-    display: none;
+    /* display: none; */
 
 }
 
@@ -85,7 +85,7 @@ li {
 
 
 #resultbox {
-    display: none;
+    /* display: none; */
     background: lightslategrey;
     width: 35%;
     margin: 200px auto 0;
@@ -129,6 +129,3 @@ td {
 }
 
 
-#next {
-    display: none;
-}
